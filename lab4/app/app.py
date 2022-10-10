@@ -8,7 +8,7 @@ import mysql.connector as connector
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
-login_manager.login_message = 'Для доступа к данной страницк необходимо пройти процедуру аутентификации.'
+login_manager.login_message = 'Для доступа к данной страницe необходимо пройти процедуру аутентификации.'
 login_manager.login_message_category = 'warning'
 
 
