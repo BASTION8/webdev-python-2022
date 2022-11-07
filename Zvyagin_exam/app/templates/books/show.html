@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex flex-column">
+    <div class="row mb-3">
+        <h3 class="my-3 text-left font-weight-bold">Обложка книги</h3>
+        <div class="col-md-6 mt-2">
+            {% for img in imgs%}
+                {% if img.book_id==book.id%}
+                    <img class="course-logo w-100 h-100" src="{{ img.url }}"/>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="col-md-6 d-flex flex-column mt-5 text-right">
+            <div class="mt-1">
+                <p>Название: <span>"{{ book.name }}"</span></p>
+            </div>
+            <div class="mb-1">
+                <p>Автор: <span>{{ book.author }}</span></p>
+            </div>
+            <div class="mb-1">
+                <p>Год издания: <span>{{ book.year }}</span></p>
+            </div>
+            <div class="mb-1">
+                <p>Издательство: <span>{{ book.publishing_house}}</span></p>
+            </div>
+            <div class="mb-1">
+                <p>Количество страниц: <span>{{ book.page_volume }}</span></p>
+            </div>
+            <div class="mb-1">
+                <p>Жанр: <span>
+                        {% for book_genre in book_genres %}
+                            {% if book_genre.book_id==book.id %}
+                                {{ book_genre.genre.name_genre }}. 
+                            {% endif %}
+                        {% endfor %}
+                    </span></p>
+            </div>
+            <div class="mb-1">
+                <p> Рейтинг:  <span>{{ book.grade_average }}</span> <span>★</span>
+                </p> 
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <h5>Краткое описание</h5>
+        <p>{{ book.short_description }}</p>
+    </div>
+    {% for review in reviews %}
+        {% if check_user == True and current_user.id == review.user_id %}
+            <div class="mb-5">
+                <div>
+                    <h5 style="text-align: center">Ваша рецензия</h5>
+                        <div class="mb-5">
+                         <h6><span>{{ review.user.full_name }}</span> Оценка:  <span>{{ review.rating }}</span> <span>★</span></h5>
+                        {{ review.text }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+            
+    <div class="mb-5">
+        <div>
+            <h5 style="text-align: center">Все рецензии оставленные пользователями к этой книге</h5>
+            {% for review in reviews %}
+                <div class="mb-5">
+                    <h6>Рецензия пользователя <span>{{ review.user.full_name }}</span> Оценка:  <span>{{ review.rating }}</span> <span>★</span></h5>
+                    {{ review.text }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% if current_user.is_authenticated and check_user == False %}
+        <div class="text-center my-3">
+            <a class="btn btn-lg btn-dark" href="{{ url_for('books.review', book_id=book.id) }}">Написать рецензию</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

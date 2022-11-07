@@ -110,7 +110,8 @@ class User(UserMixin):
 # fetchone() - вернет единственную запись в виде tuple, если результата нет вернет None
 # fetchall() - вернет все записи запроса в виде списка
 # fetchmany(10) - по частям, сколько записей хотим получить
-# named_tuple=True - записи из таблички будут не в виде tuple, а как именнованный tuple (позволяет создавать подкласы стандартного tuple, к полям котогого можно обращаться по названию, id-например)
+# named_tuple=True - записи из таблички будут не в виде tuple, а как именнованный tuple
+# (позволяет создавать подкласы стандартного tuple, к полям котогого можно обращаться по названию, id-например)
 @login_manager.user_loader
 def load_user(user_id):
     with mysql.connection.cursor(named_tuple=True) as cursor:
@@ -161,7 +162,7 @@ def logout():
 def users():
     with mysql.connection.cursor(named_tuple=True) as cursor:
         # 
-        # LEFT JOIN - созранятся все записи даже если у них нет роли 
+        # LEFT JOIN - сохранятся все записи даже если у них нет роли 
         ## Выбираем всех пользователей как столбик role_name из таблицы пользователи и соединяем с таблицей роли по ID пользователя
         cursor.execute('SELECT users.*, roles.name AS role_name FROM users LEFT JOIN roles ON users.role_id = roles.id;')
         users = cursor.fetchall()
