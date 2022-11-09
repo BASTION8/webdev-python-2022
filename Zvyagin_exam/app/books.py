@@ -8,7 +8,6 @@ import markdown
 
 
 
-
 bp = Blueprint('books', __name__, url_prefix='/books')
 
 BOOKS_PARAMS = ['name', 'short_description', 'year', 'publishing_house', 'author', 'page_volume']
@@ -33,8 +32,6 @@ def new():
 
 
 
-
-
 @bp.route('/new', methods=['POST'])
 @check_rights('create')
 @login_required
@@ -46,10 +43,8 @@ def create():
         img_saver = ImageSaver(f)
         img = img_saver.save()
 
-
     book = Book(**params())
 
-    # book = Book(**params(), background_image_id=img.id)
     # Cанитайзер чтобы экранировать все потенциально опасные теги
     book.short_description = bleach.clean(book.short_description)
    
@@ -74,7 +69,6 @@ def create():
     flash(f'Книга "{book.name}" была успешно добавлена!', 'success')
 
     return redirect(url_for('index'))
-
 
 
 
@@ -156,6 +150,7 @@ def review(book_id):
 @login_required
 def addreview(book_id):
     review = Reviews(**review_params())
+    # Cанитайзер чтобы экранировать все потенциально опасные теги
     review.text = bleach.clean(review.text)
     book = Book.query.filter_by(id=book_id).first()
     book.grade_amount += 1
