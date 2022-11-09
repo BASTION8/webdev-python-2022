@@ -130,13 +130,14 @@ def show(book_id):
 @check_rights('delete')
 def delete(book_id):
     book = Book.query.filter_by(id=book_id).first()
+    book_name = book.name
     img = Image.query.filter_by(book_id=book_id).first()
     img_path = os.path.join(os.path.dirname(os.path.abspath(
         __file__)), 'media', 'images') + '\\' + img.storage_filename
     db.session.delete(book)
     db.session.commit()
     os.remove(img_path)
-    flash(f'Книга была успешно удалена!', 'success')
+    flash(f'Книга {book_name} была успешно удалена!', 'success')
     return redirect(url_for('index'))
 
 
