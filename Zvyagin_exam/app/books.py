@@ -36,18 +36,10 @@ def new():
 @check_rights('create')
 @login_required
 def create():
-
-
-    f = request.files.get('background_img')
-    if f and f.filename:
-        img_saver = ImageSaver(f)
-        img = img_saver.save()
-
     book = Book(**params())
-
     # Cанитайзер чтобы экранировать все потенциально опасные теги
     book.short_description = bleach.clean(book.short_description)
-   
+    
     try:
         db.session.add(book)
         db.session.commit()
@@ -57,14 +49,22 @@ def create():
         return redirect(url_for('books.new'))
 
     genres = request.form.getlist('genres')
-
     for genre in genres:
         book_genre = Book_genre(book_id=book.id, genre_id=genre)
         db.session.add(book_genre)
         db.session.commit()
-
-    if img:
+    
+    try:
+        f = request.files.get('background_img')
+        if f and f.filename:
+            img_saver = ImageSaver(f)
+            img = img_saver.save()
         img_saver.bind_to_object(book)
+    except:
+        db.session.delete(book)
+        db.session.commit()
+        flash('У книги нет обложки. Ошибка сохранения', 'danger')
+        return redirect(url_for('books.new'))
 
     flash(f'Книга "{book.name}" была успешно добавлена!', 'success')
 
@@ -129,11 +129,12 @@ def show(book_id):
 @login_required
 @check_rights('delete')
 def delete(book_id):
-    Book.query.filter(Book.id == book_id).delete()    
-    db.session.commit()
+    book = Book.query.filter_by(id=book_id).first()
     img = Image.query.filter_by(book_id=book_id).first()
     img_path = os.path.join(os.path.dirname(os.path.abspath(
         __file__)), 'media', 'images') + '\\' + img.storage_filename
+    db.session.delete(book)
+    db.session.commit()
     os.remove(img_path)
     flash(f'Книга была успешно удалена!', 'success')
     return redirect(url_for('index'))

@@ -14,14 +14,9 @@ class ImageSaver:
         if self.img is not None:
             return self.img
         file_name = secure_filename(self.file.filename)
-        self.img = Image(
-            id=str(uuid.uuid4()),
-            file_name=file_name,
-            mime_type=self.file.mimetype,
-            md5_hash=self.md5_hash)
-        self.file.save(
-            os.path.join(app.config['UPLOAD_FOLDER'],
-                        self.img.storage_filename))
+        self.img = Image(id=str(uuid.uuid4()), file_name=file_name,
+                        mime_type=self.file.mimetype, md5_hash=self.md5_hash)
+        self.file.save(os.path.join(app.config['UPLOAD_FOLDER'], self.img.storage_filename))
         db.session.add(self.img)
         db.session.commit()
         return self.img
