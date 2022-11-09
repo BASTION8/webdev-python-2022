@@ -89,6 +89,7 @@ def update(book_id):
     edit_params = params()
     book.name = edit_params['name']
     book.short_description = bleach.clean(book.short_description)
+    # Cанитайзер чтобы экранировать все потенциально опасные теги
     book.short_description = edit_params['short_description']
     book.year = edit_params['year']
     book.author = edit_params['author']
