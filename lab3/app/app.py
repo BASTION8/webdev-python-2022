@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, session, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 
@@ -53,8 +54,8 @@ def load_user(user_id):
 # Доступ к секретному ключу
 app.config.from_pyfile('config.py')
 # для прослушивания всех адресов
-if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+os.environ.pop("FLASK_RUN_FROM_CLI")
+app.run(debug=False, use_reloader=False)
 
 # user_id - должен быть строкой, потому что get_id() - возвращает строку а не число 
 def get_users():
