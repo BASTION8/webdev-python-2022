@@ -53,8 +53,8 @@ def load_user(user_id):
 # Доступ к секретному ключу
 app.config.from_pyfile('config.py')
 # для прослушивания всех адресов
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0')
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
 
 # user_id - должен быть строкой, потому что get_id() - возвращает строку а не число 
 def get_users():
