@@ -55,7 +55,7 @@ app.config.from_pyfile('config.py')
 
 # user_id - должен быть строкой, потому что get_id() - возвращает строку а не число 
 def get_users():
-    return [{'user_id': '1', 'login': 'user', 'password': 'qwerty'}]
+    return [{'user_id': '1', 'login': 'user', 'password': 'qwerty', 'user_id': '2', 'login': 'admin', 'password': 'qwerty'}]
 
 @app.route('/')
 def index():

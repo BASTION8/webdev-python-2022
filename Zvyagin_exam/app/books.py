@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from auth import *
 import bleach
 from tools import ImageSaver
-
+import markdown
 
 
 bp = Blueprint('books', __name__, url_prefix='/books')
@@ -112,7 +112,7 @@ def update(book_id):
 @bp.route('/show/<int:book_id>')
 def show(book_id):
     book = Book.query.get(book_id)
-    book.short_desc = book.short_description
+    book.short_desc = markdown.markdown(book.short_description)
     book_genres = Book_genre.query.all()
     reviews = Reviews.query.filter(Reviews.book_id == book_id)
     check_user = False
